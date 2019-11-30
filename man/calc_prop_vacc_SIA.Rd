@@ -2,54 +2,66 @@
 % Please edit documentation in R/propvacc_funcs.R
 \name{calc_prop_vacc_SIA}
 \alias{calc_prop_vacc_SIA}
-\title{Calculate vaccination coverage given routine vaccination and a supplementary campaign}
+\title{Calculate the total proportion vaccinated by routine vaccination and SIA campaign}
 \usage{
-calc_prop_vacc_SIA(v1, v2, v3 = NULL, S)
+calc_prop_vacc_SIA(V, S, effectiveness, independent = FALSE)
 }
 \arguments{
-\item{v1}{a scalar giving the proportion vaccinated with first routine immunization}
+\item{V}{a vector giving the proportion vaccinated for up to three routine immunization activities}
 
-\item{v2}{a scalar giving the proportion vaccinated with second routine immunization}
+\item{S}{a scalar giving the proportion vaccinated with SIA campaign}
 
-\item{v3}{a scalar giving the proportion vaccinated with third routine immunization (default = NULL)}
+\item{effectiveness}{scalar or vector giving the vaccine effectiveness for each number of doses}
 
-\item{S}{a scalar giving the proportion vaccinated with supplemental campaign}
+\item{independent}{logical indicating if receipt of routine vaccine dose is depends on the number
+of prior doses received (default = FALSE)}
 }
 \value{
-A dataframe containing the relative proportions of the population that have recieved 0, 1, 2, 3, or 4 doses
+A scalar giving the total proportion of the population immune due to vaccination
 }
 \description{
-This function calculates the proportion immune by calculating the conditional probability of routine
-vaccination with two- or three-dose routine coverage and one SIA campaign. The method
-assumes that vaccination events are dependent, where individuals that have recieved the first
+This function calculates the proportion immune due to vaccination given the proportion vaccinated at
+each routine activity plus one SIA campaign and the effectiveness of each dose. The function assumes
+that vaccination events are dependent by default, where individuals that have recieved the first
 dose are the most likely to recieve the second dose and those that have received both the first
-and second doses are the most likely to receive the third. Receipt of a dose through the SIA campaign
-is dependent upon vaccination with at least one dose prior to the SIA campaign.
+and second doses are the most likely to receive the third. receipt of dose in SIA campaign is dependent on
+having any number of prior doses. The function uses either the two-dose plus SIA
+or three-dose plus SIA method based on the length of \code{V}. Under the assumption of dependence, the total
+proportion vaccinated is:
+\deqn{
+p_{\text{vacc}} = \sum_j \text{efficacy}_j \times \Pr(\text{dose}_j)
+}{
+ p_vacc = \sum_j effectiveness_j * Pr(dose_j)
+}
+Under the assumption of independence, the total proportion vaccinated is:
+ \deqn{
+p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
+}{
+ p_vacc = 1 - [ \prod_j effectiveness_j * Pr(not vaccinated by V_j) ]
+}
 }
 \details{
-When \code{v3 = NULL}, the function uses the simpler two dose method.
+Length of effectiveness must be equal to the number of vaccination activities
 }
 \examples{
-calc_prop_vacc_SIA(v1=0.9, v2=0.8, S=0.97) # High coverage two-dose routine and campaign
+# Two dose measles vaccine: routine without SIA
+calc_prop_vacc(V=c(0.9, 0.8),
+               effectiveness=c(0.84, 0.941),
+               independent=FALSE)
 
-calc_prop_vacc_SIA(v1=0.9, v2=0.85, v3=0.8, S=0.95) # High coverage two-dose routine and campaign
+calc_prop_vacc(V=c(0.9, 0.8),
+               effectiveness=c(0.84, 0.941),
+               independent=TRUE)
 
-calc_prop_vacc_SIA(v1=0.5, v2=0.5, v3=0.5, S=0.95) # Low routine coverage and high campaign
+# Three dose vaccine: routine without SIA
+calc_prop_vacc(V=c(0.9, 0.8, 0.7),
+               effectiveness=c(0.85, 0.9, 0.95))
 
-# Boundary conditions
-calc_prop_vacc_SIA(v1=1, v2=1, v3=1, S=1)
-calc_prop_vacc_SIA(v1=1, v2=0, v3=0, S=0)
-
-# Complex models reduce to simpler models
-calc_prop_vacc_SIA(v1=0.9, v2=0.8, v3=0.7, S=0)
-calc_prop_vacc(v1=0.9, v2=0.8, v3=0.7)
-
-calc_prop_vacc_SIA(v1=0.9, v2=0, v3=0, S=0)
-calc_prop_vacc(v1=0.9, v2=0, v3=0)
-calc_prop_vacc(v1=0.9, v2=0)
 }
 \seealso{
 Other prop_vacc: 
+\code{\link{calc_doses_SIA}()},
+\code{\link{calc_doses}()},
 \code{\link{calc_prop_vacc}()}
 }
 \author{

@@ -1,17 +1,21 @@
-calc_prop_vacc_SIA(v1=0.9, v2=0.8, S=0.97) # High coverage two-dose routine and campaign
+# Two dose measles vaccine: routine with SIA
+calc_prop_vacc_SIA(V=c(0.9, 0.7),
+                   S=0.95,
+                   effectiveness=c(0.84, 0.941, 0.99),
+                   independent=FALSE)
 
-calc_prop_vacc_SIA(v1=0.9, v2=0.85, v3=0.8, S=0.95) # High coverage two-dose routine and campaign
+calc_prop_vacc_SIA(V=c(0.9, 0.7),
+                   S=0.95,
+                   effectiveness=c(0.84, 0.941, 0.99),
+                   independent=TRUE)
 
-calc_prop_vacc_SIA(v1=0.5, v2=0.5, v3=0.5, S=0.95) # Low routine coverage and high campaign
+# Three dose vaccine: routine with SIA
+calc_prop_vacc_SIA(V=c(0.9, 0.8, 0.7),
+                   S=0.95,
+                   effectiveness=c(0.85, 0.9, 0.95, 0.99),
+                   independent=FALSE)
 
-# Boundary conditions
-calc_prop_vacc_SIA(v1=1, v2=1, v3=1, S=1)
-calc_prop_vacc_SIA(v1=1, v2=0, v3=0, S=0)
-
-# Complex models reduce to simpler models
-calc_prop_vacc_SIA(v1=0.9, v2=0.8, v3=0.7, S=0)
-calc_prop_vacc(v1=0.9, v2=0.8, v3=0.7)
-
-calc_prop_vacc_SIA(v1=0.9, v2=0, v3=0, S=0)
-calc_prop_vacc(v1=0.9, v2=0, v3=0)
-calc_prop_vacc(v1=0.9, v2=0)
+calc_prop_vacc_SIA(V=c(0.9, 0.8, 0.7),
+                   S=0.95,
+                   effectiveness=c(0.85, 0.9, 0.95, 0.99),
+                   independent=TRUE)

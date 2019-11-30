@@ -1,7 +1,7 @@
 Package: propvacc
 Type: Package
 Title: Functions to model and simulate vaccine dose coverage 
-Version: 0.1.0
+Version: 0.1.1
 Date: 2019-11-27
 Author: John Giles <giles@jhu.edu>
 Maintainer: John Giles <giles@jhu.edu>
@@ -15,4 +15,3 @@ Depends: foreach, R (>= 2.10)
 Imports: MASS, mgcv, stringr
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
-RdMacros: Rdpack

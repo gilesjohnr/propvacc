@@ -1,4 +1,3 @@
-
 ##' Get parameters for Beta distribution
 ##'
 ##' This function finds the two shape parameters for the Beta distribution of a random variable between 0 and 1.
@@ -162,7 +161,7 @@ get_beta_params_age <- function(
 }
 
 
-##' Calculate vaccination coverage given routine vaccination coverage
+##' Calculate vaccine doses received with routine vaccination
 ##'
 ##' This function calculates the proportion immune using conditional probabilities. The method
 ##' assumes that vaccination events are dependent, where individuals that have recieved the first
@@ -179,14 +178,14 @@ get_beta_params_age <- function(
 ##'
 ##' @author John Giles
 ##'
-##' @example R/examples/calc_prop_vacc.R
+##' @example R/examples/calc_doses.R
 ##'
 ##' @family prop_vacc
 ##'
 ##' @export
 ##'
 
-calc_prop_vacc <- function(
+calc_doses <- function(
   v1,  # Proportion vaccinated with first campaign
   v2,  # proportion vaccinated with second campaign
   v3=NULL   # proportion vaccinated with third campaign
@@ -222,10 +221,10 @@ calc_prop_vacc <- function(
 
     den <- sum(p_1_2, p_1_n2, p_n1_2, p_n1_n2)
 
-    return(data.frame(doses=2:0,
-                      prop=c(p_1_2/den,
+    return(data.frame(doses=0:2,
+                      prop=c(p_n1_n2/den,
                              (p_1_n2 + p_n1_2)/den,
-                             p_n1_n2/den)))
+                             p_1_2/den)))
 
   } else if (!is.null(v3)) {
 
@@ -303,16 +302,16 @@ calc_prop_vacc <- function(
     den <- sum(p_1_2_3, p_1_2_n3, p_1_n2_3, p_n1_2_3,
                p_1_n2_n3, p_n1_2_n3, p_n1_n2_3, p_n1_n2_n3)
 
-    return(data.frame(doses=3:0,
-                      prop=c(p_1_2_3/den,
-                             sum(p_1_2_n3, p_1_n2_3, p_n1_2_3)/den,
+    return(data.frame(doses=0:3,
+                      prop=c(p_n1_n2_n3/den,
                              sum(p_1_n2_n3, p_n1_2_n3, p_n1_n2_3)/den,
-                             p_n1_n2_n3/den)))
+                             sum(p_1_2_n3, p_1_n2_3, p_n1_2_3)/den,
+                             p_1_2_3/den)))
   }
 }
 
 
-##' Calculate vaccination coverage given routine vaccination and a supplementary campaign
+##' Calculate vaccine doses received with routine vaccination and SIA campaign
 ##'
 ##' This function calculates the proportion immune by calculating the conditional probability of routine
 ##' vaccination with two- or three-dose routine coverage and one SIA campaign. The method
@@ -332,14 +331,14 @@ calc_prop_vacc <- function(
 ##'
 ##' @author John Giles
 ##'
-##' @example R/examples/calc_prop_vacc_SIA.R
+##' @example R/examples/calc_doses_SIA.R
 ##'
 ##' @family prop_vacc
 ##'
 ##' @export
 ##'
 
-calc_prop_vacc_SIA <- function(
+calc_doses_SIA <- function(
   v1,        # Proportion vaccinated with first routine immunization
   v2,        # proportion vaccinated with second routine immunization
   v3=NULL,   # proportion vaccinated with third routine immunization
@@ -348,7 +347,7 @@ calc_prop_vacc_SIA <- function(
 
   if (!all(v1 >= 0 & v1 <= 1, v2 >= 0 & v2 <= 1, S >= 0 & S <= 1)) stop('Arguments must be between 0 and 1')
 
-  p_prior <- sum(calc_prop_vacc(v1=v1, v2=v2)[1:2,2])
+  p_prior <- sum(calc_doses(v1=v1, v2=v2)[1:2,2])
 
   if (is.null(v3)) {
 
@@ -393,17 +392,17 @@ calc_prop_vacc_SIA <- function(
     den <- sum(p_1_2_S, p_1_2_nS, p_1_n2_S, p_1_n2_nS,
                p_n1_2_S, p_n1_2_nS, p_n1_n2_S, p_n1_n2_nS)
 
-    return(data.frame(doses=3:0,
-                      prop=c(p_1_2_S/den,
-                             sum(p_1_2_nS, p_1_n2_S, p_n1_2_S)/den,
+    return(data.frame(doses=0:3,
+                      prop=c(p_n1_n2_nS/den,
                              sum(p_1_n2_nS, p_n1_2_nS, p_n1_n2_S)/den,
-                             p_n1_n2_nS/den)))
+                             sum(p_1_2_nS, p_1_n2_S, p_n1_2_S)/den,
+                             p_1_2_S/den)))
 
   } else if (!is.null(v3)) {
 
     if(!(v3 >= 0 & v3 <= 1)) stop('Arguments must be between 0 and 1')
 
-    p_prior <- sum(calc_prop_vacc(v1=v1, v2=v2, v3=v3)[1:3,2])
+    p_prior <- sum(calc_doses(v1=v1, v2=v2, v3=v3)[1:3,2])
 
     if (v2 >= v1) {
       d_12 <- 0           # Dropout rate from 1 to 2
@@ -545,12 +544,170 @@ calc_prop_vacc_SIA <- function(
                p_1_2_3_nS, p_1_2_n3_nS, p_1_n2_3_nS, p_n1_2_3_nS,
                p_1_n2_n3_nS, p_n1_2_n3_nS, p_n1_n2_3_nS, p_n1_n2_n3_nS)
 
-    return(data.frame(doses=4:0,
-                      prop=c(p_1_2_3_S/den,
-                             sum(p_n1_2_3_S, p_1_n2_3_S, p_1_2_n3_S, p_1_2_3_nS)/den,
+    return(data.frame(doses=0:4,
+                      prop=c(p_n1_n2_n3_nS/den,
+                             sum(p_1_n2_n3_nS, p_n1_2_n3_nS, p_n1_n2_3_nS, p_n1_n2_n3_S)/den,
                              sum(p_1_2_n3_nS, p_1_n2_3_nS, p_n1_2_3_nS,
                                  p_1_n2_n3_S, p_n1_2_n3_S, p_n1_n2_3_S)/den,
-                             sum(p_1_n2_n3_nS, p_n1_2_n3_nS, p_n1_n2_3_nS, p_n1_n2_n3_S)/den,
-                             p_n1_n2_n3_nS/den)))
+                             sum(p_n1_2_3_S, p_1_n2_3_S, p_1_2_n3_S, p_1_2_3_nS)/den,
+                             p_1_2_3_S/den)))
   }
 }
+
+
+
+##' Calculate the total proportion vaccinated by routine vaccination
+##'
+##' This function calculates the proportion immune due to vaccination given the proportion vaccinated at
+##' each routine activity and the effectiveness of each dose. The function assumes that vaccination events
+##' are dependent by default, where individuals that have recieved the first
+##' dose are the most likely to recieve the second dose and those that have received both the first
+##' and second doses are the most likely to receive the third. The function uses either the two-dose
+##' or three-dose method based on the length of \code{V}. Under the assumption of dependence, the total
+##' proportion vaccinated is:
+##' \deqn{
+##' p_{\text{vacc}} = \sum_j \text{efficacy}_j \times \Pr(\text{dose}_j)
+##' }{
+##'  p_vacc = \sum_j effectiveness_j * Pr(dose_j)
+##' }
+##' Under the assumption of independence, the total proportion vaccinated is:
+##'  \deqn{
+##' p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
+##' }{
+##'  p_vacc = 1 - [ \prod_j effectiveness_j * Pr(not vaccinated by V_j) ]
+##' }
+##'
+##' @param V a vector giving the proportion vaccinated for up to three routine immunization activities
+##' @param effectiveness scalar or vector giving the vaccine effectiveness for each number of doses
+##' @param independent logical indicating if receipt of routine vaccine dose is depends on the number
+##' of prior doses received (default = FALSE)
+##'
+##' @return A scalar giving the total proportion of the population immune due to vaccination
+##'
+##' @author John Giles
+##'
+##' @example R/examples/calc_prop_vacc.R
+##'
+##' @family prop_vacc
+##'
+##' @export
+##'
+
+calc_prop_vacc <- function(
+  V,
+  effectiveness,
+  independent=FALSE
+){
+
+  if (!(length(V) == length(effectiveness))) stop('length of V and effectiveness must be equal')
+
+  if (independent == FALSE) {
+
+    if (length(V) == 2) { # Two dose vaccine
+
+      p <- calc_doses(v1=V[1], v2=V[2])
+
+      return(sum(c(0, effectiveness) * p[,2]))
+
+    } else if (length(V) == 3) { # 3 dose vaccine
+
+      p <- calc_doses(v1=V[1], v2=V[2], v3=V[3])
+
+      return(sum(c(0, effectiveness) * p[,2]))
+
+    }
+  } else if (independent == TRUE) {
+
+    if (length(V) == 2) {
+
+      return(1 - ((1-effectiveness[1]*V[1]) * (1-effectiveness[2]*V[2])))
+
+    } else if (length(V) == 3) { # 3 dose vaccine
+
+      return(1 - ((1-effectiveness[1]*V[1]) * (1-effectiveness[2]*V[2]) * (1-effectiveness[3]*V[3])) )
+
+    }
+  }
+}
+
+
+
+##' Calculate the total proportion vaccinated by routine vaccination and SIA campaign
+##'
+##' This function calculates the proportion immune due to vaccination given the proportion vaccinated at
+##' each routine activity plus one SIA campaign and the effectiveness of each dose. The function assumes
+##' that vaccination events are dependent by default, where individuals that have recieved the first
+##' dose are the most likely to recieve the second dose and those that have received both the first
+##' and second doses are the most likely to receive the third. receipt of dose in SIA campaign is dependent on
+##' having any number of prior doses. The function uses either the two-dose plus SIA
+##' or three-dose plus SIA method based on the length of \code{V}. Under the assumption of dependence, the total
+##' proportion vaccinated is:
+##' \deqn{
+##' p_{\text{vacc}} = \sum_j \text{efficacy}_j \times \Pr(\text{dose}_j)
+##' }{
+##'  p_vacc = \sum_j effectiveness_j * Pr(dose_j)
+##' }
+##' Under the assumption of independence, the total proportion vaccinated is:
+##'  \deqn{
+##' p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
+##' }{
+##'  p_vacc = 1 - [ \prod_j effectiveness_j * Pr(not vaccinated by V_j) ]
+##' }
+##'
+##' Length of effectiveness must be equal to the number of vaccination activities
+##'
+##' @param V a vector giving the proportion vaccinated for up to three routine immunization activities
+##' @param S a scalar giving the proportion vaccinated with SIA campaign
+##' @param effectiveness scalar or vector giving the vaccine effectiveness for each number of doses
+##' @param independent logical indicating if receipt of routine vaccine dose is depends on the number
+##' of prior doses received (default = FALSE)
+##'
+##' @return A scalar giving the total proportion of the population immune due to vaccination
+##'
+##' @author John Giles
+##'
+##' @example R/examples/calc_prop_vacc.R
+##'
+##' @family prop_vacc
+##'
+##' @export
+##'
+
+calc_prop_vacc_SIA <- function(
+  V,
+  S,
+  effectiveness,
+  independent=FALSE
+){
+
+  if (!(length(c(V,S)) == length(effectiveness))) stop('length of c(V,S) and effectiveness must be equal')
+
+  if (independent == FALSE) {
+
+    if (length(V) == 2) { # Two dose vaccine ans SIA
+
+      p <- calc_doses_SIA(v1=V[1], v2=V[2], S=S)
+
+      return(sum(c(0, effectiveness) * p[,2]))
+
+    } else if (length(V) == 3) { # 3 dose vaccine and SIA
+
+      p <- calc_doses_SIA(v1=V[1], v2=V[2], v3=V[3], S=S)
+
+      return(sum(c(0, effectiveness) * p[,2]))
+
+    }
+  } else if (independent == TRUE) {
+
+    if (length(V) == 2) { # 2 dose vaccine and SIA
+
+      return(1 - ((1-effectiveness[1]*V[1]) * (1-effectiveness[2]*V[2]) * (1-effectiveness[3]*S)))
+
+    } else if (length(V) == 3) { # 3 dose vaccine and SIA
+
+      return(1 - ((1-effectiveness[1]*V[1]) * (1-effectiveness[2]*V[2]) * (1-effectiveness[3]*V[3]) * (1-effectiveness[3]*S)) )
+
+    }
+  }
+}
+

@@ -2,84 +2,60 @@
 % Please edit documentation in R/propvacc_funcs.R
 \name{calc_prop_vacc}
 \alias{calc_prop_vacc}
-\title{Calculate vaccination coverage given routine vaccination coverage}
+\title{Calculate the total proportion vaccinated by routine vaccination}
 \usage{
-calc_prop_vacc(v1, v2, v3 = NULL)
+calc_prop_vacc(V, effectiveness, independent = FALSE)
 }
 \arguments{
-\item{v1}{a scalar giving the proportion vaccinated with first routine immunization}
+\item{V}{a vector giving the proportion vaccinated for up to three routine immunization activities}
 
-\item{v2}{a scalar giving the proportion vaccinated with second routine immunization}
+\item{effectiveness}{scalar or vector giving the vaccine effectiveness for each number of doses}
 
-\item{v3}{a scalar giving the proportion vaccinated with third routine immunization (default = NULL)}
+\item{independent}{logical indicating if receipt of routine vaccine dose is depends on the number
+of prior doses received (default = FALSE)}
 }
 \value{
-A dataframe containing the relative proportions of the population that have recieved 0, 1, 2, or 3 doses
+A scalar giving the total proportion of the population immune due to vaccination
 }
 \description{
-This function calculates the proportion immune using conditional probabilities. The method
-assumes that vaccination events are dependent, where individuals that have recieved the first
+This function calculates the proportion immune due to vaccination given the proportion vaccinated at
+each routine activity and the effectiveness of each dose. The function assumes that vaccination events
+are dependent by default, where individuals that have recieved the first
 dose are the most likely to recieve the second dose and those that have received both the first
-and second doses are the most likely to receive the third.
+and second doses are the most likely to receive the third. The function uses either the two-dose
+or three-dose method based on the length of \code{V}. Under the assumption of dependence, the total
+proportion vaccinated is:
+\deqn{
+p_{\text{vacc}} = \sum_j \text{efficacy}_j \times \Pr(\text{dose}_j)
+}{
+ p_vacc = \sum_j effectiveness_j * Pr(dose_j)
 }
-\details{
-When \code{v3 = NULL}, the function uses the simpler two dose method.
+Under the assumption of independence, the total proportion vaccinated is:
+ \deqn{
+p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
+}{
+ p_vacc = 1 - [ \prod_j effectiveness_j * Pr(not vaccinated by V_j) ]
+}
 }
 \examples{
-# Two dose vaccine
-calc_prop_vacc(0.9, 0.9)
-calc_prop_vacc(1, 0.5)
-calc_prop_vacc(0.5, 0.5)
+# Two dose measles vaccine: routine without SIA
+calc_prop_vacc(V=c(0.9, 0.8),
+               effectiveness=c(0.84, 0.941),
+               independent=FALSE)
 
-# Three dose vaccine
-calc_prop_vacc(0.9, 0.9, 0.8)
-calc_prop_vacc(1, 0.5, 0)
-calc_prop_vacc(1, 0, 0.5)
+calc_prop_vacc(V=c(0.9, 0.8),
+               effectiveness=c(0.84, 0.941),
+               independent=TRUE)
 
-# Should be equivalent
-all.equal(calc_prop_vacc(0.999, 0.5)[,2],
-          calc_prop_vacc(0.999, 0.5, 0)[2:4,2],
-          tolerance=0.02)
+# Three dose vaccine: routine without SIA
+calc_prop_vacc(V=c(0.9, 0.8, 0.7),
+               effectiveness=c(0.85, 0.9, 0.95))
 
-all.equal(calc_prop_vacc(0.9, 0.8)[,2],
-          calc_prop_vacc(0.9, 0.8, 0)[2:4,2],
-          tolerance=0.02)
-
-# Boundary conditions
-calc_prop_vacc(0, 0)
-calc_prop_vacc(1, 0)
-calc_prop_vacc(1, 0, 0)
-calc_prop_vacc(1, 1)
-calc_prop_vacc(1, 1, 0)
-calc_prop_vacc(1, 1, 1)
-calc_prop_vacc(1, 0, 1)
-calc_prop_vacc(0, 1, 1)
-
-# The assumptions may not hold well when v1 << v2 << v3.
-# In this case its better to assume independence?
-calc_prop_vacc(0.1, 0.9)
-calc_prop_vacc(0.1, 0.5, 0.9)
-
-# Calculate total proportion vaccinated with MCV1 and MCV2 with efficacy
-p <- calc_prop_vacc(0.9, 0.8)
-sum(0.93*p[2,2], 0.97*p[1,2])
-
-# Estimate posterior distribution of proportion vaccinated given uncertainty around MCV1 and MCV2
-sims <- foreach(i=1:1000, .combine='c') \%do\% {
-
-     p <- calc_prop_vacc(rbeta(1,40,1), rbeta(1,4,2))
-     0.93*p[2,2] + 0.97*p[1,2]
-}
-
-q <- quantile(sims, c(0.025, 0.5, 0.975))
-
-par(mfrow=c(1,1))
-hist(sims, breaks=100, col='cyan', xlab='Proportion vaccinated')
-abline(v=q[2], lwd=3)
-abline(v=q[c(1,3)], lty=2, lwd=2)
 }
 \seealso{
 Other prop_vacc: 
+\code{\link{calc_doses_SIA}()},
+\code{\link{calc_doses}()},
 \code{\link{calc_prop_vacc_SIA}()}
 }
 \author{
