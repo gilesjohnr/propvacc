@@ -51,10 +51,9 @@ calc_doses(v1=0.9, v2=0)
 
 }
 \seealso{
-Other prop_vacc: 
-\code{\link{calc_doses}()},
-\code{\link{calc_prop_vacc_SIA}()},
-\code{\link{calc_prop_vacc}()}
+Other prop_vacc: \code{\link{calc_doses}()},
+  \code{\link{calc_prop_vacc_SIA}()},
+  \code{\link{calc_prop_vacc}()}
 }
 \author{
 John Giles

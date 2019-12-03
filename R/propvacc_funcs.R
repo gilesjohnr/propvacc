@@ -660,7 +660,7 @@ calc_prop_vacc <- function(
 ##' @param S a scalar giving the proportion vaccinated with SIA campaign
 ##' @param effectiveness scalar or vector giving the vaccine effectiveness for each number of doses
 ##' @param independent logical indicating if receipt of routine vaccine dose is depends on the number
-##' of prior doses received (default = FALSE)
+##' of prior doses received and receipt of SIA dose depends on at least one prior dose (default = FALSE)
 ##'
 ##' @return A scalar giving the total proportion of the population immune due to vaccination
 ##'
@@ -705,7 +705,7 @@ calc_prop_vacc_SIA <- function(
 
     } else if (length(V) == 3) { # 3 dose vaccine and SIA
 
-      return(1 - ((1-effectiveness[1]*V[1]) * (1-effectiveness[2]*V[2]) * (1-effectiveness[3]*V[3]) * (1-effectiveness[3]*S)) )
+      return(1 - ((1-effectiveness[1]*V[1]) * (1-effectiveness[2]*V[2]) * (1-effectiveness[3]*V[3]) * (1-effectiveness[4]*S)) )
 
     }
   }

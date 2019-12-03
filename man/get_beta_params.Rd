@@ -4,7 +4,8 @@
 \alias{get_beta_params}
 \title{Get parameters for Beta distribution}
 \usage{
-get_beta_params(mu = NULL, sigma = NULL, quantiles = NULL, probs = NULL)
+get_beta_params(mu = NULL, sigma = NULL, quantiles = NULL,
+  probs = NULL)
 }
 \arguments{
 \item{mu}{scalar giving the mean \eqn{\mu}}
@@ -85,8 +86,7 @@ curve(dbeta(x, prm$shape1, prm$shape2), 0, 1)
 abline(v=mcv2, lty=2, col='blue')
 }
 \seealso{
-Other beta_params: 
-\code{\link{get_beta_params_age}()}
+Other beta_params: \code{\link{get_beta_params_age}()}
 }
 \author{
 John Giles
