@@ -78,7 +78,8 @@ tmp <- foreach(i=unique(dhs_namibia_2013$region.residence), .combine='rbind') \%
 }
 }
 \seealso{
-Other beta_params: \code{\link{get_beta_params}()}
+Other beta_params: 
+\code{\link{get_beta_params}()}
 }
 \author{
 John Giles

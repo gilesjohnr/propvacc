@@ -79,9 +79,10 @@ abline(v=q[2], lwd=3)
 abline(v=q[c(1,3)], lty=2, lwd=2)
 }
 \seealso{
-Other prop_vacc: \code{\link{calc_doses_SIA}()},
-  \code{\link{calc_prop_vacc_SIA}()},
-  \code{\link{calc_prop_vacc}()}
+Other prop_vacc: 
+\code{\link{calc_doses_SIA}()},
+\code{\link{calc_prop_vacc_SIA}()},
+\code{\link{calc_prop_vacc}()}
 }
 \author{
 John Giles

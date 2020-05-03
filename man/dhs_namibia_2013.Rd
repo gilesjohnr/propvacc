@@ -4,7 +4,9 @@
 \name{dhs_namibia_2013}
 \alias{dhs_namibia_2013}
 \title{2013 DHS vaccination data for Namibia}
-\format{Dataframe}
+\format{
+Dataframe
+}
 \usage{
 dhs_namibia_2013
 }
