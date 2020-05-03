@@ -37,10 +37,12 @@ p <- calc_doses(0.9, 0.8)
 sum(0.93*p[2,2], 0.97*p[3,2])
 
 # Estimate posterior distribution of proportion vaccinated given uncertainty around MCV1 and MCV2
-sims <- foreach(i=1:1000, .combine='c') %do% {
+n <- 1000
+sims <- rep(NA, n)
+for (i in 1:n) {
 
      p <- calc_doses(rbeta(1,40,1), rbeta(1,4,2))
-     0.93*p[2,2] + 0.97*p[3,2]
+     sims[i] <- 0.93*p[2,2] + 0.97*p[3,2]
 }
 
 q <- quantile(sims, c(0.025, 0.5, 0.975))

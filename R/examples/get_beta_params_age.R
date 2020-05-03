@@ -37,6 +37,7 @@ plot(tmp$mu, type='l')
 
 
 # 3-month age groups for each region
+require(foreach)
 tmp <- foreach(i=unique(dhs_namibia_2013$region.residence), .combine='rbind') %do% {
 
   sel <- dhs_namibia_2013$region.residence == i
