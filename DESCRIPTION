@@ -11,7 +11,20 @@ License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
-Depends: foreach, R (>= 2.10)
-Imports: MASS, mgcv, stringr
-Suggests: knitr, rmarkdown, testthat
+Imports: 
+  foreach,
+  MASS, 
+  mgcv, 
+  stringr
+Depends: 
+  R (>= 2.10),
+  stats, 
+  graphics,
+  grDevices,
+  utils,
+  methods
+Suggests: 
+  knitr, 
+  rmarkdown, 
+  testthat
 VignetteBuilder: knitr
