@@ -574,7 +574,7 @@ calc_doses_SIA <- function(
 ##'  \deqn{
 ##' p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
 ##' }{
-##'  p_vacc = 1 - [ \prod_j effectiveness_j * Pr(not vaccinated by V_j) ]
+##'  p_vacc = 1 - ( \prod_j effectiveness_j * Pr(not vaccinated by V_j) )
 ##' }
 ##'
 ##' @param V a vector giving the proportion vaccinated for up to three routine immunization activities
@@ -651,7 +651,7 @@ calc_prop_vacc <- function(
 ##'  \deqn{
 ##' p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
 ##' }{
-##'  p_vacc = 1 - [ \prod_j effectiveness_j * Pr(not vaccinated by V_j) ]
+##'  p_vacc = 1 - ( \prod_j effectiveness_j * Pr(not vaccinated by V_j) )
 ##' }
 ##'
 ##' Length of effectiveness must be equal to the number of vaccination activities
