@@ -50,7 +50,7 @@ get_beta_params <- function(
 
     message('Calculating Beta distribution parameters from quantiles using sums of squares')
 
-    fit.beta <- function(x,           # vector of shape and rate parameters for beta distribution
+    fit_beta <- function(x,           # vector of shape and rate parameters for beta distribution
                          quantiles,   # the quantiles for which proportions are observed
                          probs        # the observed proportions
     ) {
@@ -59,7 +59,7 @@ get_beta_params <- function(
 
     suppressWarnings(
       params <- optim(par=c(1,1), # initialize with flat beta distribution
-                      fn=fit.beta,
+                      fn=fit_beta,
                       quantiles=quantiles,
                       probs=probs,
                       method='Nelder-Mead',
