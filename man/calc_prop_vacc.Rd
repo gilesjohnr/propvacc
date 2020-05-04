@@ -23,19 +23,7 @@ each routine activity and the effectiveness of each dose. The function assumes t
 are dependent by default, where individuals that have recieved the first
 dose are the most likely to recieve the second dose and those that have received both the first
 and second doses are the most likely to receive the third. The function uses either the two-dose
-or three-dose method based on the length of \code{V}. Under the assumption of dependence, the total
-proportion vaccinated is:
-\deqn{
-p_{\text{vacc}} = \sum_j \text{efficacy}_j \times \Pr(\text{dose}_j)
-}{
- p_vacc = \sum_j effectiveness_j * Pr(dose_j)
-}
-Under the assumption of independence, the total proportion vaccinated is:
- \deqn{
-p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
-}{
- p_vacc = 1 - ( \prod_j effectiveness_j * Pr(not vaccinated by V_j) )
-}
+or three-dose method based on the length of \code{V}.
 }
 \examples{
 # Two dose measles vaccine: routine without SIA

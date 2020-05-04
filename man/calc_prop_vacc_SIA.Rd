@@ -26,19 +26,7 @@ that vaccination events are dependent by default, where individuals that have re
 dose are the most likely to recieve the second dose and those that have received both the first
 and second doses are the most likely to receive the third. receipt of dose in SIA campaign is dependent on
 having any number of prior doses. The function uses either the two-dose plus SIA
-or three-dose plus SIA method based on the length of \code{V}. Under the assumption of dependence, the total
-proportion vaccinated is:
-\deqn{
-p_{\text{vacc}} = \sum_j \text{efficacy}_j \times \Pr(\text{dose}_j)
-}{
- p_vacc = \sum_j effectiveness_j * Pr(dose_j)
-}
-Under the assumption of independence, the total proportion vaccinated is:
- \deqn{
-p_{\text{vacc}} = 1 - ( \prod_j effectiveness_j * \Pr(not vaccinated by V_j) )
-}{
- p_vacc = 1 - ( \prod_j effectiveness_j * Pr(not vaccinated by V_j) )
-}
+or three-dose plus SIA method based on the length of \code{V}.
 }
 \details{
 Length of effectiveness must be equal to the number of vaccination activities
