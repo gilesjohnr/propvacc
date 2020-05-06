@@ -1,0 +1,4 @@
+template:
+  params:
+    theme: flatly
+    bootswatch: flatly
